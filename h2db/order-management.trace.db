@@ -1,0 +1,4 @@
+2025-08-07 11:23:08.275783+05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM PRODUCTS \000d\000aORDER_ITEMS [*]ORDERS"; SQL statement:
+SELECT * FROM PRODUCTS 
+ORDER_ITEMS ORDERS [42000-232]
