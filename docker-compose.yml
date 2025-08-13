@@ -19,12 +19,22 @@ services:
       retries: 5
       start_period: 10s
 
+  redis:
+    image: redis:7-alpine
+    container_name: order-management-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
   order-management-api:
     build: .
     container_name: order-management-api
     depends_on:
       postgres-db:
         condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "8080:8080"
     environment:
@@ -32,6 +42,8 @@ services:
       - DB_URL=jdbc:postgresql://postgres-db:5432/order_db
       - DB_USERNAME=user
       - DB_PASSWORD=password
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
     networks:
       - app-network
 

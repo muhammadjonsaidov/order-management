@@ -8,6 +8,10 @@ import com.intern.order.exception.ProductNotFoundException;
 import com.intern.order.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,7 @@ public class ProductService {
         return productRepository.findAll(pageable).map(this::mapToProductResponse);
     }
 
+    @Cacheable(value = "products", key = "#id")
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
@@ -36,6 +41,7 @@ public class ProductService {
         return mapToProductResponse(product);
     }
 
+    @CacheEvict(value = "products", allEntries = true)
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
         log.info("Creating a new product with name: {}", request.getName());
@@ -51,6 +57,10 @@ public class ProductService {
         return mapToProductResponse(savedProduct);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products", key = "#id"),
+            @CacheEvict(value = "products", allEntries = true)
+    })
     @Transactional
     public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
         log.info("Updating product with ID: {}", id);
@@ -68,6 +78,10 @@ public class ProductService {
         return mapToProductResponse(updatedProduct);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products", key = "#id"),
+            @CacheEvict(value = "products", allEntries = true)
+    })
     @Transactional
     public void deleteProduct(Long id) {
         log.warn("Attempting to delete product with ID: {}", id);
@@ -78,6 +92,7 @@ public class ProductService {
         log.warn("Product with ID: {} has been deleted.", id);
     }
 
+    @Cacheable(value = "products", key = "'search_name=' + #name + '_category=' + #category")
     @Transactional(readOnly = true)
     public List<ProductResponse> searchProducts(String name, String category) {
         String searchName = (name == null) ? "" : name;
