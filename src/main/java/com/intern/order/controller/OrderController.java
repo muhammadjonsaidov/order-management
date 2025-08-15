@@ -4,6 +4,7 @@ import com.intern.order.dto.CreateOrderRequest;
 import com.intern.order.dto.OrderResponse;
 import com.intern.order.enums.OrderStatus;
 import com.intern.order.service.OrderService;
+import com.intern.order.validation.annotations.ValueOfEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
 @Tag(name = "02. Orders", description = "API for managing customer orders")
+@Validated
 public class OrderController {
 
     private final OrderService orderService;
@@ -77,8 +80,10 @@ public class OrderController {
     @PutMapping("/{id}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @Parameter(description = "ID of the order to update", example = "1") @PathVariable Long id,
-            @Parameter(description = "The new status for the order") @RequestParam OrderStatus status) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
+            @Parameter(description = "The new status for the order (e.g., CONFIRMED, SHIPPED)")
+            @ValueOfEnum(enumClass = OrderStatus.class, message = "Invalid status provided")
+            @RequestParam String status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(id, OrderStatus.valueOf(status.toUpperCase())));
     }
 
     @Operation(summary = "Cancel an order by its ID")
