@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
 
 server:
   port: 8080
@@ -12,3 +12,19 @@ app:
   jwt:
     secret: "aVeryStrongAndLongSecretKeyForJWTThatShouldBeInAnEnvironmentVariable"
     expiration-ms: 86400000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics
+
+  endpoint:
+    health:
+      show-details: always
+
+  info:
+    app:
+      name: E-commerce Order Management System
+      description: A robust REST API for managing products and orders.
+      version: 1.0.0

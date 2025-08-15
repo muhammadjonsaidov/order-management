@@ -28,7 +28,12 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // 1. Eng aniq ochiq yo'llar
-                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/actuator/**"
+                        ).permitAll()
 
                         // 2. ADMIN uchun aniq cheklangan yo'llar
                         .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
