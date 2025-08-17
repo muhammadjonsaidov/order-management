@@ -64,14 +64,14 @@ This single command will build the Java application, start the PostgreSQL and Re
 #### c) Accessing the Services
 
 -   **API Server**: `http://localhost:8080`
--   **Swagger UI (API Docs)**: `http://localhost:8080/swagger-ui.html`
+-   **Swagger UI (API Docs)**: `http://localhost:8080/swagger-ui/index.html`
 -   **Actuator Health Check**: `http://localhost:8080/actuator/health`
 
 ## 5. API Documentation & Usage
 
 All endpoints are fully documented in the interactive Swagger UI. This is the best place to explore and test the API.
 
-➡️ [**Swagger UI: http://localhost:8080/swagger-ui.html**](http://localhost:8080/swagger-ui.html)
+➡️ [**Swagger UI: http://localhost:8080/swagger-ui/index.html**](http://localhost:8080/swagger-ui.html)
 
 **Authentication:**
 1.  Use the `POST /api/auth/login` endpoint with default credentials (`admin`/`admin123` or `user`/`user123`) or register a new user via `POST /api/auth/register`.
